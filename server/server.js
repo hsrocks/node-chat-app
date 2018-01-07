@@ -17,13 +17,12 @@ io.on('connection',function(socket){
   socket.on('createMessage',(message,callback)=>{
     console.log('Create message',message);
     io.emit('newMessage',generateMessage(message.from,message.text));
-    callback('This is a server message');
+    callback();
   });
 
   socket.on('createLocationMessage',(coords,callback)=>{
     console.log('Create Location message',coords);
     io.emit('newLocationMessage',generateLocationMessage('Admin',coords.latitude,coords.longitude));
-    callback();
   });
 
   socket.on('disconnect',()=>{

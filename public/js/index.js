@@ -22,21 +22,15 @@ socket.on('newLocationMessage',function(message){
   li.append(a);
   $('#messages').append(li)
 })
-
-socket.emit('createMessage',{
-  from : 'Frank',
-  text : 'Hi'
-},function(data){
-  console.log('Ack Recieved',data);
-})
-
+var messageTextBox = $('[name=message]');
 $('#message-form').on('submit', function(event){
   // to override the default behaviour of form to refresh it every time we submit we use preventDefault
   event.preventDefault();
   socket.emit('createMessage',{
     from: 'User',
-    text: $('[name=message]').val()
+    text: messageTextBox.val()
   },function(){
+      text: messageTextBox.val('')
   })
 })
 
@@ -45,13 +39,15 @@ locationButton.on('click',function(){
   if(!navigator.geolocation){
     return alert('Geolocation not supported by your user')
   }
+  locationButton.attr('disabled','disabled').text('Sending Location ...')
   navigator.geolocation.getCurrentPosition(function(position){
+      locationButton.removeAttr('disabled').text('Send Location ...')
     socket.emit('createLocationMessage',{
       latitude : position.coords.latitude,
       longitude : position.coords.longitude
-    },function(){
     })
-  }),function(){
+  },function(){
+    locationButton.removeAttr('disabled').text('Send Location ...')
     alert('Unable to fetch location')
-  }
+  })
 })
