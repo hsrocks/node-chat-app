@@ -7,29 +7,15 @@ const publicPath =path.join(__dirname , '../public');
 const port = process.env.PORT || 3000;
 var server = http.createServer(app);
 var io = socketIO(server);
+const {generateMessage} = require('./utils/message');
 app.use(express.static(publicPath));
 io.on('connection',function(socket){
   console.log('New user connected');
-  socket.emit('createMessage',{
-    from : 'admin',
-    text : 'Hi Thanks for joining the chatroom'
-  });
-  socket.broadcast.emit('createMessage',{
-    from : 'admin',
-    text : 'New user joined'
-  })
-  socket.on('createMessage',(newMessage)=>{
-    console.log('Create message',newMessage);
-    io.emit('newMessage',{
-      from : newMessage.from,
-      text : newMessage.text,
-      CreatedAt : new Date().getTime()
-    })
-    // socket.broadcast.emit('newMessage',{
-    //   from : newMessage.from,
-    //   text : newMessage.text,
-    //   CreatedAt : new Date().getTime()
-    // })
+  socket.emit('newMessage',generateMessage('admin','Hi Thanks for joining the chatroom'))
+  socket.broadcast.emit('newMessage',generateMessage('admin','New user joined'))
+  socket.on('createMessage',(message)=>{
+    console.log('Create message',message);
+    io.emit('newMessage',generateMessage(message.from,message.text))
   });
   socket.on('disconnect',()=>{
     console.log('User disconnected');
