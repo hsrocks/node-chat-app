@@ -13,9 +13,10 @@ io.on('connection',function(socket){
   console.log('New user connected');
   socket.emit('newMessage',generateMessage('admin','Hi Thanks for joining the chatroom'))
   socket.broadcast.emit('newMessage',generateMessage('admin','New user joined'))
-  socket.on('createMessage',(message)=>{
+  socket.on('createMessage',(message,callback)=>{
     console.log('Create message',message);
-    io.emit('newMessage',generateMessage(message.from,message.text))
+    io.emit('newMessage',generateMessage(message.from,message.text));
+    callback();
   });
   socket.on('disconnect',()=>{
     console.log('User disconnected');
