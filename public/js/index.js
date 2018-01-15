@@ -1,4 +1,19 @@
 var socket = io();
+
+function scrollToBottom(){
+  //selectors
+  var messages = $('#messages');
+  var newMessage = messages.children('li:last-child')
+  //heights
+  var clientHeight = messages.prop('clientHeight');
+  var scrollTop = messages.prop('scrollTop');
+  var scrollHeight = messages.prop('scrollHeight');
+  var newMessageHeight = newMessage.innerHeight();
+  if(scrollTop  + clientHeight+ newMessageHeight >= scrollHeight){
+    // scrollTop is jQuery method to set  the scrollTop and we set it to scrollHeight
+    messages.scrollTop(scrollHeight)
+  }
+}
 socket.on('connect',function(){
   console.log('Connected to a server');
 
@@ -19,6 +34,7 @@ socket.on('newMessage',function(message){
     createdAt : formattedTime
   });
   $('#messages').append(html);
+  scrollToBottom();
 })
 
 socket.on('newLocationMessage',function(message){
@@ -36,6 +52,7 @@ socket.on('newLocationMessage',function(message){
     createdAt : formattedTime
   });
   $('#messages').append(html);
+  scrollToBottom();
 })
 var messageTextBox = $('[name=message]');
 $('#message-form').on('submit', function(event){
