@@ -26,9 +26,11 @@ socket.on('connect',function(){
     }
   })
 });
+
 socket.on('disconnect',function(){
   console.log('Disconnected to a server');
 });
+
 
 socket.on('updateUserList',function(users){
   var ol = $('<ol></ol>');

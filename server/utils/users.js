@@ -1,11 +1,37 @@
 class Users{
   constructor (){
     this.users = [];
+    this.room = [];
+  }
+  addRoom (room){
+    var roomLower = room.toLowerCase();
+    var rooms= this.room.filter((roomVal)=>{
+      return roomVal.toLowerCase() === roomLower;
+    });
+    if(!(rooms.length>0)){
+      this.room.push(room);
+    }
+  }
+  removeRoom(room){
+    var roomLower= room.toLowerCase()
+    var rooms= this.room.filter((roomName)=>{
+      return roomLower===roomName.toLowerCase();
+    });
+    var index = this.room.indexOf(rooms[0]);
+    if (index > -1) {
+    this.room.splice(index, 1);
+  }
+  return rooms[0];
   }
   addUser (id,name,room){
+    room = room.toLowerCase();
     var user ={id , name ,room};
     this.users.push(user);
     return user;
+  }
+
+  getRoom (){
+    return this.room;
   }
   removeUser(id){
     var user= this.users.filter((user)=>{
@@ -26,6 +52,7 @@ class Users{
   }
   getUserList(room){
     // We got array of users object
+    room = room.toLowerCase();
     var users= this.users.filter((user)=>{
       return user.room === room;
     });
